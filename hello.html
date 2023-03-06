@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Options</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <form>
+      <label for="defaultselect">Chose your ChatGPT Asisstant Profile:</label>
+      <select id="defaultselect" name="defaultselect">
+		<option value="custom1user1">Custom1 / User1</option> 
+		<option value="custom2user2">Custom2 / User2</option> 
+		<option value="custom3user3">Custom3 / User3</option> 
+      </select>
+    </form>
+    <div id="response"></div>
+	<button id="copyButton">Copy answer to clipboard</button>
+    <textarea id="edit" name="edit" rows="10"></textarea>
+	<div class="button-container">
+	<button id="submitButton">Resubmit</button>
+	<button id="optionsButton">Options</button>
+	</div>
+    <script src="generate.js"></script>
+  </body>
+</html>
