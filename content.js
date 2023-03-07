@@ -185,6 +185,7 @@ function CreatePopupWindow(){
 	if (!popup) {
 			popup = document.createElement("div");
 			popup.id = "popupwindow";
+			popup.className="GPTExtensionForm";
 			popup.style.position = "absolute";
 			popup.style.left = "0px";
 			popup.style.top = "0px";
@@ -198,27 +199,27 @@ function CreatePopupWindow(){
 			  </head>		
 			  <div class="GPTExtensionForm">
 				<label class="GPTExtensionlabel" for="defaultselect">Chose your ChatGPT Profile:</label>
-				<select id="defaultselect" name="defaultselect">
+				<select class="GPTExtensionselect" id="defaultselect" name="defaultselect">
 				  <option value="custom1user1">Profile1</option> 
 				  <option value="custom2user2">Profile2</option> 
 				  <option value="custom3user3">Profile3</option> 
 				</select>
-				<input id="custom" type="text">
-				<input id="user" type="text">
+				<input class="GPTExtensioninput" id="custom" type="text">
+				<input class="GPTExtensioninput" id="user" type="text">
 				
 			  <div class="GPTExtensiondiv" id="response">response area</div>
-			  <div class="button-container">
+			  <div class="GPTExtensionbutton-container">
 			 <button class="GPTExtensionbutton"  id="copyButton">
 				  Copy to clipboard
-				  <img src="copytoclipboard.png" alt="Copy to Clipboard">
+				  <img src="${chrome.runtime.getURL("copytoclipboard.png")}" alt="Copy to Clipboard">
 			 </button>
 			 <button class="GPTExtensionbutton"  id="copyToEditButton">
 				  Copy to Edit 
-				  <img src="copytotextarea.png" alt="Copy to Edit">
+				  <img src="${chrome.runtime.getURL("copytotextarea.png")}" alt="Copy to Edit">
 			</button>
 			</div>
 			  <textarea class="GPTExtensiontextarea" id="edit" name="edit" rows="10"></textarea>
-			  <div class="button-container">
+			  <div class="GPTExtensionbutton-container">
 				<button class="GPTExtensionbutton" id="submitButton">Submit</button><div id="status"></div>
 				<button class="GPTExtensionbutton" id="optionsButton">Options</button>
 			  </div>

@@ -8,7 +8,7 @@
   "options_page": "options.html",
   "web_accessible_resources": [{
   "matches": ["<all_urls>"],
-  "resources": ["icon.png","options.css"]
+  "resources": ["icon.png","copytoclipboard.png","copytotextarea.png","options.css"]
   }],
   "background": {
 	"service_worker": "background.js"

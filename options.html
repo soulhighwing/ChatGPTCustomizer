@@ -9,40 +9,40 @@
     <h1 class="GPTExtensionh1">ChatGPTCustomizer Options</h1>
     <form class="GPTExtensionForm">
 		<label class="GPTExtensionlabel" for="defaultselect">Default Profile:</label>
-		<select id="defaultselect" name="defaultselect">
+		<select class="GPTExtensionselect" id="defaultselect" name="defaultselect">
 
 		<option value="custom1user1">Profile1</option> 
 		<option value="custom2user2">Profile2</option> 
 		<option value="custom3user3">Profile3</option> </select>
 		
 		<label class="GPTExtensionlabel" for="custom1">Profile 1:</label>
-		<input type="text" id="custom1" name="custom1">
-		<input type="text" id="user1" name="user1">
+		<input class="GPTExtensioninput" type="text" id="custom1" name="custom1">
+		<input class="GPTExtensioninput" type="text" id="user1" name="user1">
 		<label class="GPTExtensionlabel" for="custom2">Profile 2:</label>
-		<input type="text" id="custom2" name="custom2">
-		<input type="text" id="user2" name="user2">
+		<input class="GPTExtensioninput" type="text" id="custom2" name="custom2">
+		<input class="GPTExtensioninput" type="text" id="user2" name="user2">
 		<label class="GPTExtensionlabel" for="custom3">Profile 3:</label>
-		<input type="text" id="custom3" name="custom3">
-		<input type="text" id="user3" name="user3">
+		<input class="GPTExtensioninput" type="text" id="custom3" name="custom3">
+		<input class="GPTExtensioninput" type="text" id="user3" name="user3">
 		
 		<label class="GPTExtensionlabel" for="apikey">API Key:</label>
-		<input type="text" id="apikey" name="apikey">
+		<input class="GPTExtensioninput" type="text" id="apikey" name="apikey">
 
       <label class="GPTExtensionlabel" for="temperature">Temperature(0-1):</label>
-      <input type="text" id="temperature" name="temperature">
+      <input class="GPTExtensioninput" type="text" id="temperature" name="temperature">
 
       <label class="GPTExtensionlabel" for="max_token">Max Tokens(1-2048):</label>
-      <input type="text" id="max_token" name="max_token">
+      <input class="GPTExtensioninput" type="text" id="max_token" name="max_token">
 
       <label class="GPTExtensionlabel" for="top_p">Top P(0-1):</label>
-      <input type="text" id="top_p" name="top_p">
+      <input class="GPTExtensioninput" type="text" id="top_p" name="top_p">
 
       <label class="GPTExtensionlabel" for="models">Model:</label>
-      <input type="text" id="models" name="models">
+      <input class="GPTExtensioninput" type="text" id="models" name="models">
 		<label class="GPTExtensionlabel" for="autosubmit">Auto Submit when open the popup window:</label>
-        <input type="checkbox" id="autosubmit" name="autosubmit">
+        <input class="GPTExtensioninput" type="checkbox" id="autosubmit" name="autosubmit">
 
-	<div class="button-container">	
+	<div class="GPTExtensionbutton-container">	
       <button  class="GPTExtensionbutton" type="button" id="save">Save Options</button><div id="status"></div>
       <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default Options</button>
 	  </div>
