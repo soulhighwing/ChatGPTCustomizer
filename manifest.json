@@ -1,16 +1,29 @@
 {
   "manifest_version": 3,
   "name": "ChatGPTCustomizer",
-  "permissions": ["storage","scripting","tabs","activeTab"],
+  "permissions": ["storage","scripting","activeTab","tabs"],
   "host_permissions": ["https://api.openai.com/*"],
   "description": "Customize your assistant using ChatGPT API with multiple profiles.",
   "version": "1.0",
   "options_page": "options.html",
+  "web_accessible_resources": [{
+  "matches": ["<all_urls>"],
+  "resources": ["icon.png","options.css"]
+  }],
+  "background": {
+	"service_worker": "background.js"
+	},  
   "action": {
-    "default_popup": "hello.html",
+    "default_popup": "options.html",
     "default_icon": "icon128.png"
   },
   "icons": { "16": "icon16.png",
              "48": "icon48.png",
-            "128": "icon128.png" }
+            "128": "icon128.png" },
+ "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
 }

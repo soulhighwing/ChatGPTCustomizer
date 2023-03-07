@@ -13,6 +13,7 @@ const temperatureInput = document.getElementById('temperature');
 const maxTokenInput = document.getElementById('max_token');
 const topPInput = document.getElementById('top_p');
 const modelsInput = document.getElementById('models');
+const autosubmitBox = document.getElementById('autosubmit');
 
 // Get the button elements
 const saveButton = document.getElementById('save');
@@ -36,14 +37,11 @@ chrome.storage.sync.get(['options'], (result) => {
       maxTokenInput.value = options.savemaxToken;
       topPInput.value = options.savetopP;
       modelsInput.value = options.savemodels;
+	  autosubmitBox.checked = options.saveautosubmit=="checked"?"checked":"";
     }
 	else{
 		restoreDefaults();
 	}
-		
-	updateCustom1User1Option();	
-	updateCustom2User2Option();
-	updateCustom3User3Option();
 	
   });
 
@@ -61,7 +59,7 @@ function saveOptions() {
   var topP = parseFloat(document.getElementById('top_p').value);
   var models = document.getElementById('models').value;
   var defaultAssistant = document.getElementById('defaultselect').value;
-
+  var autosubmit = document.getElementById('autosubmit').checked?'checked':'';
   // validate temperature input
   if (temperature < 0 || temperature > 1 || isNaN(temperature)) {
     alert('Temperature must be a number between 0 and 1.');
@@ -91,7 +89,8 @@ function saveOptions() {
     savemaxToken: maxToken,
     savetopP: topP,
     savemodels: models,
-    savedefaultAssistant: defaultAssistant
+    savedefaultAssistant: defaultAssistant,
+	saveautosubmit: autosubmit
   };
 	
   chrome.storage.sync.set({ options: defaultOptions }, function() {
@@ -110,7 +109,7 @@ function restoreDefaults() {
 	savecustom1: 'Act as a tranlator.',
 	saveuser1: 'Rewrite the text in authentic English:',
 	savecustom2: 'Act as a proofreader.',
-    saveuser2: '  Proofread the following content:',
+    saveuser2: 'Proofread the following content:',
 	savecustom3: 'Act as a summerizer.',	  
     saveuser3: 'summerize following content in less than 100 words:',
     saveapiKey: 'YOUR_API_KEY',
@@ -118,7 +117,8 @@ function restoreDefaults() {
     savemaxToken: '512',
     savetopP: '1',
     savemodels: 'gpt-3.5-turbo-0301',
-    savedefaultAssistant: 'custom1user1'
+    savedefaultAssistant: 'custom1user1',
+	saveautosubmit: 'checked'
   };
   chrome.storage.sync.set({ options: defaultOptions }, () => {
     // Reload the page to show the default options
@@ -131,36 +131,4 @@ saveButton.addEventListener('click', saveOptions);
 restoreButton.addEventListener('click', restoreDefaults);
 
 
-// Get references to the input fields and the option elements
-const custom1User1Option = document.querySelector('#defaultselect option[value="custom1user1"]');
-const custom2User2Option = document.querySelector('#defaultselect option[value="custom2user2"]');
-const custom3User3Option = document.querySelector('#defaultselect option[value="custom3user3"]');
 
-// Add event listeners to the input fields to update the option elements
-custom1Input.addEventListener('input', updateCustom1User1Option);
-user1Input.addEventListener('input', updateCustom1User1Option);
-
-custom2Input.addEventListener('input', updateCustom2User2Option);
-user2Input.addEventListener('input', updateCustom2User2Option);
-
-custom3Input.addEventListener('input', updateCustom3User3Option);
-user3Input.addEventListener('input', updateCustom3User3Option);
-
-// Define the functions that update the option elements
-function updateCustom1User1Option() {
-  const custom1Value = custom1Input.value;
-  const user1Value = user1Input.value;
-  custom1User1Option.textContent = `${custom1Value} / ${user1Value}`;
-}
-
-function updateCustom2User2Option() {
-  const custom2Value = custom2Input.value;
-  const user2Value = user2Input.value;
-  custom2User2Option.textContent = `${custom2Value} / ${user2Value}`;
-}
-
-function updateCustom3User3Option() {
-  const custom3Value = custom3Input.value;
-  const user3Value = user3Input.value;
-  custom3User3Option.textContent = `${custom3Value} / ${user3Value}`;
-}
