@@ -1,25 +1,46 @@
-  var custom1Value = "Act as a tranlator.";
-  var user1Value = 'Rewrite the text in authentic English:';
-  var custom2Value = "Act as a proofreader.";
-  var user2Value = 'Proofread the following content:';
-  var custom3Value = "Act as a summerizer.";
-  var user3Value = 'summerize following content in less than 100 words:';
-  var apiKey = 'YOUR_API_KEY';
-  var temperature = '0.5';
-  var maxToken = '512';
-  var topP = '1';
-  var models = 'gpt-3.5-turbo-0301';
-  var defaultAssistant = 'custom1user1';
-  var autosubmit = 'checked';
-  
+var custom1Value = "Act as a tranlator.";
+var user1Value = 'Rewrite the text in authentic English:';
+var custom2Value = "Act as a proofreader.";
+var user2Value = 'Proofread the following content:';
+var custom3Value = "Act as a summerizer.";
+var user3Value = 'summerize following content in less than 100 words:';
+var apiKey = 'YOUR_API_KEY';
+var temperature = '0.5';
+var maxToken = '512';
+var topP = '1';
+var models = 'gpt-3.5-turbo-0301';
+var defaultAssistant = 'custom1user1';
+var autosubmit = 'checked';
+var isDragging = false;
+var lastX, lastY;  
+var popup,icon;
+
 console.log("content.js running");
 CreateIcon();
 CreatePopupWindow();
+document.addEventListener('mousedown', function(event) {
+	if (popup.contains(event.target)) {
+          isDragging = true;
+          lastX = event.clientX;
+          lastY = event.clientY;
+		}
+});		
+document.addEventListener('mousemove', function(event) {
+	if (isDragging) {
+		var deltaX = event.clientX - lastX;
+		var deltaY = event.clientY - lastY;
+		var newX = popup.offsetLeft + deltaX;
+		var newY = popup.offsetTop + deltaY;
+		popup.style.left = newX + 'px';
+		popup.style.top = newY + 'px';
+		lastX = event.clientX;
+		lastY = event.clientY;
+	}
+});
 
 document.addEventListener("mouseup", function(event) {
+  isDragging = false;
   var selection = window.getSelection().toString();
-  var icon = document.getElementById("text-highlight-icon");
-  var popup = document.getElementById("popupwindow");
   if (selection.length > 1) {  
 	if(popup.style.display==='none')
 	{
@@ -222,7 +243,7 @@ function makeStreamApiCall(selectedText) {
 
 
 function CreateIcon(){
-    var  icon = document.createElement("img");
+    icon = document.createElement("img");
     icon.id = "text-highlight-icon";
     icon.src = chrome.runtime.getURL("icon.png");
     icon.style.position = "absolute";
@@ -250,8 +271,9 @@ function CreateIcon(){
 	});	  
 	icon.style.display = 'none';
 }
+
 function CreatePopupWindow(){
-    var popup = document.getElementById("popupwindow");
+    popup = document.getElementById("popupwindow");
 	if (!popup) {
 			popup = document.createElement("div");
 			popup.id = "popupwindow";
@@ -267,7 +289,7 @@ function CreatePopupWindow(){
 			  <head>
 				<link rel="stylesheet" href="${chrome.runtime.getURL("options.css")}">
 			  </head>		
-			  <div class="GPTExtensionForm">
+			 <div class="GPTExtensionForm">
 				<label class="GPTExtensionlabel" for="defaultselect">Chose your ChatGPT Profile:</label>
 				<select class="GPTExtensionselect" id="defaultselect" name="defaultselect">
 				  <option value="custom1user1">Profile1</option> 
