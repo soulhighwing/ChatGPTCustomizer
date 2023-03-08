@@ -20,9 +20,11 @@ CreateIcon();
 CreatePopupWindow();
 document.addEventListener('mousedown', function(event) {
 	if (popup.contains(event.target)) {
-          isDragging = true;
-          lastX = event.clientX;
-          lastY = event.clientY;
+		if(event.target.className!="GPTExtensioninput"&&event.target.className!="GPTExtensiontextarea"){
+			  isDragging = true;
+			  lastX = event.clientX;
+			  lastY = event.clientY;
+		  }
 		}
 });		
 document.addEventListener('mousemove', function(event) {
