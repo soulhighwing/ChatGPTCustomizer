@@ -4,7 +4,7 @@
   "permissions": ["storage","scripting","activeTab","tabs"],
   "host_permissions": ["https://api.openai.com/*"],
   "description": "Customize your assistant using ChatGPT API with multiple profiles.",
-  "version": "1.0",
+  "version": "1.11",
   "options_page": "options.html",
   "web_accessible_resources": [{
   "matches": ["<all_urls>"],

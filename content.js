@@ -35,7 +35,7 @@ document.addEventListener("mouseup", function(event) {
 		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = "mouseup:"+autosubmit;
 		if(autosubmit=='checked')
-			makeApiCall(selection); 
+			makeStreamApiCall(selection); 
 	}
 	
   } 
@@ -135,8 +135,8 @@ function makeApiCall(selectedText) {
   };
 	
 
-	var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
-	var userstring=document.getElementById('user').value+selectedText;
+  var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
+  var userstring=document.getElementById('user').value+selectedText;
 	
   document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
   const data = {
@@ -151,6 +151,75 @@ function makeApiCall(selectedText) {
     };  
   xhr.send(JSON.stringify(data));
 };
+
+function makeStreamApiCall(selectedText) {
+	const API_KEY = apiKey;
+	const API_URL = "https://api.openai.com/v1/chat/completions";
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", API_URL, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setRequestHeader("Authorization", `Bearer ${API_KEY}`);
+	xhr.setRequestHeader('Accept', 'text/event-stream');
+	
+    var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
+    var userstring=document.getElementById('user').value+selectedText;
+    document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
+	const reqBody = {
+		messages: [
+			  //{"role": "system", "content": "You answer questions factually based on the context provided."},
+			  //{"role": "system","name":"context","content": systemstring},
+			  {"role": "user", "content":systemstring+selectedText}],
+		model: models,
+		max_tokens: maxToken,
+		temperature: temperature,
+		top_p: topP,
+		stream: true,
+	};
+
+	xhr.onreadystatechange = function() {
+		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+			console.log("Stream request completed successfully.");
+		}
+	};
+
+	xhr.onprogress = function(event) {
+		if (event.lengthComputable) {
+			console.log(`Received ${event.loaded} bytes of data.`);
+		} else {
+			console.log(`Received data.`);
+		}
+
+		const responseText = xhr.responseText.trim();
+		if (responseText.length > 0) 
+		{
+			let buffer = '';
+			let responseJson;
+			let lines = responseText.split('\n');
+			for (let i = 0; i < lines.length; i++) 
+			{
+				let line = lines[i].trim();
+				console.log(line);
+				if (line.startsWith('data:')) 
+				{
+					line = line.substring(5).trim();
+					if(line!='[DONE]'){
+						responseJson = JSON.parse(line);
+						if(responseJson.choices[0].delta.content)
+							buffer+=responseJson.choices[0].delta.content;
+					}
+				}; 
+			};				
+			document.getElementById('response').innerHTML = buffer;
+		} else 
+		{
+			console.log("Stream request completed.");
+		}
+	};
+
+	xhr.send(JSON.stringify(reqBody));
+}
+
+
 function CreateIcon(){
     var  icon = document.createElement("img");
     icon.id = "text-highlight-icon";
@@ -175,7 +244,7 @@ function CreateIcon(){
 		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = autosubmit+"iconclick:"+(autosubmit=='checked')+(autosubmit==='checked');
 		if(autosubmit=='checked')
-			makeApiCall(selection); 
+			makeStreamApiCall(selection); 
 
 	});	  
 	icon.style.display = 'none';
@@ -218,7 +287,7 @@ function CreatePopupWindow(){
 				  <img src="${chrome.runtime.getURL("copytotextarea.png")}" alt="Copy to Edit">
 			</button>
 			</div>
-			  <textarea class="GPTExtensiontextarea" id="edit" name="edit" rows="10"></textarea>
+			  <textarea class="GPTExtensiontextarea" id="edit" name="edit" rows="5"></textarea>
 			  <div class="GPTExtensionbutton-container">
 				<button class="GPTExtensionbutton" id="submitButton">Submit</button><div id="status"></div>
 				<button class="GPTExtensionbutton" id="optionsButton">Options</button>
@@ -250,7 +319,7 @@ function CreatePopupWindow(){
 			});
 
 			document.getElementById('submitButton').addEventListener('click', () => {
-			  makeApiCall(document.getElementById('edit').value);
+			  makeStreamApiCall(document.getElementById('edit').value);
 			});
 			LoadOptions();
 			
