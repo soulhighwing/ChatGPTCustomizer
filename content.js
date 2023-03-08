@@ -23,19 +23,20 @@ document.addEventListener("mouseup", function(event) {
   if (selection.length > 1) {  
 	if(popup.style.display==='none')
 	{
-		icon.style.left = event.pageX + "px";
-		icon.style.top = event.pageY + "px";
+		icon.style.left = (event.pageX+5) + "px";
+		icon.style.top = (event.pageY+5) + "px";
 		icon.style.display='';
 	}	
 	else{
 		if (popup.contains(event.target)) {
 			return; // clicked element is inside the popup window, do nothing
 		}
-		LoadOptions();
+	//	LoadOptions();
 		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = "mouseup:"+autosubmit;
-		if(autosubmit=='checked')
-			makeStreamApiCall(selection); 
+		//do not submit, even if autosubmit is checked
+	//	if(autosubmit=='checked')
+	//		makeStreamApiCall(selection); 
 	}
 	
   } 
