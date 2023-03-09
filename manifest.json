@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
   "name": "ChatGPTCustomizer",
-  "permissions": ["storage","scripting","activeTab","tabs"],
+  "permissions": ["storage"],
   "host_permissions": ["https://api.openai.com/*"],
   "description": "Customize your assistant using ChatGPT API with multiple profiles.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "options_page": "options.html",
   "web_accessible_resources": [{
   "matches": ["<all_urls>"],

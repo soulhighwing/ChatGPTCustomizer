@@ -15,7 +15,7 @@ var isDragging = false;
 var lastX, lastY;  
 var popup,icon;
 
-console.log("content.js running");
+//console.log("content.js running");
 CreateIcon();
 CreatePopupWindow();
 document.addEventListener('mousedown', function(event) {
@@ -207,12 +207,13 @@ function makeStreamApiCall(selectedText) {
 	};
 
 	xhr.onprogress = function(event) {
+		/*
 		if (event.lengthComputable) {
 			console.log(`Received ${event.loaded} bytes of data.`);
 		} else {
 			console.log(`Received data.`);
 		}
-
+		*/
 		const responseText = xhr.responseText.trim();
 		if (responseText.length > 0) 
 		{
@@ -222,7 +223,7 @@ function makeStreamApiCall(selectedText) {
 			for (let i = 0; i < lines.length; i++) 
 			{
 				let line = lines[i].trim();
-				console.log(line);
+				//console.log(line);
 				if (line.startsWith('data:')) 
 				{
 					line = line.substring(5).trim();
