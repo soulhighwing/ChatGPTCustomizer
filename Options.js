@@ -1,99 +1,201 @@
-// Get the default select element
-const defaultAssistant = document.getElementById('defaultselect');
+// Define a variable to store the profiles
+let profiles = [];
 
-// Get the input elements
-const custom1Input = document.getElementById('custom1');
-const user1Input = document.getElementById('user1');
-const custom2Input = document.getElementById('custom2');
-const user2Input = document.getElementById('user2');
-const custom3Input = document.getElementById('custom3');
-const user3Input = document.getElementById('user3');
 const apiKeyInput = document.getElementById('apikey');
 const temperatureInput = document.getElementById('temperature');
 const maxTokenInput = document.getElementById('max_token');
 const topPInput = document.getElementById('top_p');
 const modelsInput = document.getElementById('models');
 const autosubmitBox = document.getElementById('autosubmit');
-
 // Get the button elements
 const saveButton = document.getElementById('save');
 const restoreButton = document.getElementById('restore');
 
+loadsaveProfiles();
+loadsaveOptions();
 
-// Load the saved options from storage
-chrome.storage.sync.get(['options'], (result) => {
-    // Set the saved options as the default values
-    const options = result.options;
-    if (options) {
-      defaultAssistant.value = options.savedefaultAssistant;
-      custom1Input.value = options.savecustom1;
-      user1Input.value = options.saveuser1;
-      custom2Input.value = options.savecustom2;
-      user2Input.value = options.saveuser2;
-      custom3Input.value = options.savecustom3;
-      user3Input.value = options.saveuser3;
-      apiKeyInput.value = options.saveapiKey;
-      temperatureInput.value = options.savetemperature;
-      maxTokenInput.value = options.savemaxToken;
-      topPInput.value = options.savetopP;
-      modelsInput.value = options.savemodels;
-	  autosubmitBox.checked = options.saveautosubmit=="checked"?"checked":"";
-    }
-	else{
-		restoreDefaults();
-	}
-	
+// Loads the profiles from the Chrome storage
+function loadsaveProfiles() {
+  chrome.storage.sync.get(['saveprofiles'], function(result) {
+	//  console.log(result);	
+	  if(result.length==0)
+		createDefaultProfiles();
+	  else
+		profiles=result.saveprofiles;
+	 reloadProfileUI();
   });
+};
+
+function createDefaultProfiles(){
+    profiles = [];
+	//console.log("create default profiles");
+	// Define a new profile object
+	const newProfile1 = {
+	  savecustom: 'tranlator',
+	  saveuser: 'Rewrite the text in authentic English:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile1);
+	// Define a new profile object
+	const newProfile2 = {
+	  savecustom: 'proofreader',
+	  saveuser: 'Proofread the following content in original language:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile2);
+	// Define a new profile object
+	const newProfile3 = {
+	  savecustom: 'summarizer',
+	  saveuser: 'Summarize following content in less than 20 words:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile3);
+};
+
+
+function reloadProfileUI(){
+	  // Get the profile list element
+	  const profileList = document.getElementById('GPTExtensionprofiles-list');
+	  profileList.innerHTML='';
+	  // Loop through each profile and create a list item element for it
+	  profiles.forEach(function(profile, index) {
+		// Create a new list item element
+		const listItem = document.createElement('li');
+
+		// Set the ID of the list item to the index of the profile
+		listItem.id = 'profile-' + index;
+		listItem.className='GPTExtensionli';
+		listItem.draggable = true;
+		listItem.innerHTML = `
+			<div class="GPTExtensionbutton-container">	
+			<input class="GPTExtensionnameinput" type="text" id="custom${index}" name="custom${index}" value="${profile.savecustom}">
+			<input class="GPTExtensioninput" type="text" id="user${index}" name="user${index}" value="${profile.saveuser}">
+			</div>
+		`;
+		// Add the list item to the profile list
+		profileList.appendChild(listItem);
+		listItem.addEventListener('dragstart', handleDragStart);
+		listItem.addEventListener('dragenter', handleDragEnter);
+		listItem.addEventListener('dragover', handleDragOver);
+		listItem.addEventListener('drop', handleDrop);
+
+		});	
+};
+
+
+
+
+function loadsaveOptions(){
+	// Load the saved options from storage
+	chrome.storage.sync.get(['options'], (result) => {
+		// Set the saved options as the default values
+		const options = result.options;
+		if (options) {
+			reloadOptionUI(options);
+		}
+		else{
+			reloadOptionUI(createDefaultOptions());
+		}
+	
+	});
+};
+
+function createDefaultOptions(){
+  const options = {
+    saveapiKey: 'PUT_YOUR_API_KEY',
+    savetemperature: '1',
+    savemaxToken: '512',
+    savetopP: '1',
+    savemodels: 'gpt-3.5-turbo-0301',
+	saveautosubmit: 'checked'
+  };
+  return options;
+ };
+
+function reloadOptionUI(options){
+   apiKeyInput.value = options.saveapiKey;
+   temperatureInput.value = options.savetemperature;
+   maxTokenInput.value = options.savemaxToken;
+   topPInput.value = options.savetopP;
+   modelsInput.value = options.savemodels;
+   autosubmitBox.checked = options.saveautosubmit=="checked"?"checked":"";	
+};
+
+
+// Restore the default options
+function restoreDefaults() {
+    createDefaultProfiles();	
+	reloadProfileUI();
+	reloadOptionUI(createDefaultOptions());
+};
+
+// Attach click event listeners to the buttons
+saveButton.addEventListener('click', saveOptions);
+restoreButton.addEventListener('click', restoreDefaults);
+
+// Saves the profiles to the Chrome storage
+function saveProfiles() {
+	const profilesList = document.getElementById('GPTExtensionprofiles-list');
+	profiles = [];
+
+	for (let i = 0; i < profilesList.children.length; i++) {
+		const customInput = profilesList.children[i].querySelector('.GPTExtensionnameinput');
+		const userInput = profilesList.children[i].querySelector('.GPTExtensioninput');
+		const newprofile = {
+		savecustom: customInput.value,
+		saveuser: userInput.value
+		};
+  
+		profiles.push(newprofile);
+	}
+  chrome.storage.sync.set({ saveprofiles: profiles }, function() {
+    // Notify the user that the profiles were saved.
+    var status = document.getElementById('status');
+    status.textContent = 'Profiles saved.';
+    setTimeout(function() {
+      status.textContent = '';
+    }, 1000);
+  });  
+};
+
 
 // Save the options to storage
 function saveOptions() {
-  var custom1value = document.getElementById('custom1').value;
-  var user1 = document.getElementById('user1').value;
-  var custom2value = document.getElementById('custom2').value;
-  var user2 = document.getElementById('user2').value;
-  var custom3value = document.getElementById('custom3').value;
-  var user3 = document.getElementById('user3').value;
-  var apiKey = document.getElementById('apikey').value;
-  var temperature = parseFloat(document.getElementById('temperature').value);
-  var maxToken = parseInt(document.getElementById('max_token').value);
-  var topP = parseFloat(document.getElementById('top_p').value);
-  var models = document.getElementById('models').value;
-  var defaultAssistant = document.getElementById('defaultselect').value;
+  var apiKey = apiKeyInput.value;
+  var temperature = parseFloat(temperatureInput.value);
+  var maxToken = parseInt(maxTokenInput.value);
+  var topP = parseFloat(topPInput.value);
+  var models = modelsInput.value;
   var autosubmit = document.getElementById('autosubmit').checked?'checked':'';
+  
   // validate temperature input
   if (temperature < 0 || temperature > 1 || isNaN(temperature)) {
     alert('Temperature must be a number between 0 and 1.');
     return;
-  }
+  };
 
   // validate maxToken input
   if (maxToken < 1 || maxToken > 2048 || isNaN(maxToken)) {
     alert('Max Tokens must be a number between 1 and 2048.');
     return;
-  }
+  };
 
   // validate topP input
   if (topP < 0 || topP > 1 || isNaN(topP)) {
     alert('Top P must be a number between 0 and 1.');
     return;
-  }
-	const defaultOptions = {
-	savecustom1:custom1value,
-    saveuser1: user1,
-	savecustom2:custom2value,
-    saveuser2: user2,
-	savecustom3:custom3value,
-    saveuser3: user3,
-    saveapiKey: apiKey,
+  };
+  
+  saveProfiles();
+  const optionstobesave = {
+	saveapiKey: apiKey,
     savetemperature: temperature,
     savemaxToken: maxToken,
     savetopP: topP,
     savemodels: models,
-    savedefaultAssistant: defaultAssistant,
 	saveautosubmit: autosubmit
   };
-	
-  chrome.storage.sync.set({ options: defaultOptions }, function() {
+  chrome.storage.sync.set({ options: optionstobesave }, function() {
     // Notify the user that the options were saved.
     var status = document.getElementById('status');
     status.textContent = 'Options saved.';
@@ -101,34 +203,53 @@ function saveOptions() {
       status.textContent = '';
     }, 1000);
   });
-}
+};
 
-// Restore the default options
-function restoreDefaults() {
-  const defaultOptions = {
-	savecustom1: 'Act as a tranlator.',
-	saveuser1: 'Rewrite the text in authentic English:',
-	savecustom2: 'Act as a proofreader.',
-    saveuser2: 'Proofread the following content:',
-	savecustom3: 'Act as a summerizer.',	  
-    saveuser3: 'summerize following content in less than 100 words:',
-    saveapiKey: 'YOUR_API_KEY',
-    savetemperature: '0.5',
-    savemaxToken: '512',
-    savetopP: '1',
-    savemodels: 'gpt-3.5-turbo-0301',
-    savedefaultAssistant: 'custom1user1',
-	saveautosubmit: 'checked'
-  };
-  chrome.storage.sync.set({ options: defaultOptions }, () => {
-    // Reload the page to show the default options
-    location.reload();
-  });
-}
 
-// Attach click event listeners to the buttons
-saveButton.addEventListener('click', saveOptions);
-restoreButton.addEventListener('click', restoreDefaults);
+
+
+function handleDragStart(event) {
+  // Store the item's id in the dataTransfer object
+  event.dataTransfer.setData('text/plain', event.target.id);
+};
+
+function handleDragEnter(event) {
+  // Prevent default to allow drop
+  event.preventDefault();
+};
+
+function handleDragOver(event) {
+  // Prevent default to allow drop
+  event.preventDefault();
+};
+
+function handleDrop(event) {
+  // Get the id of the dragged item
+  const id = event.dataTransfer.getData('text/plain');
+  console.log(id);
+
+  // Get the elements for the dragged and dropped items
+  const draggedItem = document.getElementById(id);
+  const droppedItem = event.target.closest('.GPTExtensionli');
+  const dropzone = event.target.closest('#GPTExtensionprofiles-list');
+  const droppedIndex = Array.from(dropzone.children).indexOf(droppedItem);
+  console.log(droppedItem);
+	console.log(dropzone);
+  // Move the dragged item to the dropzone
+//  dropzone.appendChild(draggedItem);
+
+  // Get the index of the dragged item
+  const draggedIndex = Array.from(dropzone.children).indexOf(draggedItem);
+
+  // Move the dragged item to the dropzone
+  if (draggedIndex < droppedIndex) {
+    // Insert the dragged item after the dropped item
+    dropzone.insertBefore(draggedItem, droppedItem.nextSibling);
+  } else {
+    // Insert the dragged item before the dropped item
+    dropzone.insertBefore(draggedItem, droppedItem);
+  }  
+};
 
 
 

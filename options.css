@@ -23,7 +23,7 @@
 
       .GPTExtensionlabel {
         display: inline-block;
-        width: 400px;
+        width: 500px;
         margin-bottom: 5px;
         font-weight: bold;
       }
@@ -36,6 +36,16 @@
         border: 2px solid #ccc;
         border-radius: 5px;
         box-sizing: border-box;
+      }
+     .GPTExtensionnameinput[type=text] {
+        display: block;
+        width: 25%;
+        padding: 5px;
+        margin-bottom: 5px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+		font-weight: bold;
       }
 	  
 		.GPTExtensiontextarea {
@@ -92,3 +102,13 @@
   align-items: center;
 }
 
+#GPTExtensionprofiles-list {
+   margin: 0px;
+   padding-left:25px;
+}
+
+  .GPTExtensionli {
+     position: relative;
+	 padding-left:0px;
+    cursor: pointer;
+  }

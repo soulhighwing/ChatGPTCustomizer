@@ -1,21 +1,17 @@
-var custom1Value = "Act as a tranlator.";
-var user1Value = 'Rewrite the text in authentic English:';
-var custom2Value = "Act as a proofreader.";
-var user2Value = 'Proofread the following content:';
-var custom3Value = "Act as a summerizer.";
-var user3Value = 'summerize following content in less than 100 words:';
+let profiles = [];
 var apiKey = 'YOUR_API_KEY';
-var temperature = '0.5';
+var temperature = '1';
 var maxToken = '512';
 var topP = '1';
 var models = 'gpt-3.5-turbo-0301';
-var defaultAssistant = 'custom1user1';
 var autosubmit = 'checked';
 var isDragging = false;
 var lastX, lastY;  
 var popup,icon;
 
 //console.log("content.js running");
+LoadProfiles();
+LoadOptions();
 CreateIcon();
 CreatePopupWindow();
 document.addEventListener('mousedown', function(event) {
@@ -54,12 +50,12 @@ document.addEventListener("mouseup", function(event) {
 		if (popup.contains(event.target)) {
 			return; // clicked element is inside the popup window, do nothing
 		}
-	//	LoadOptions();
+		LoadOptions();
 		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = "mouseup:"+autosubmit;
-		//do not submit, even if autosubmit is checked
-	//	if(autosubmit=='checked')
-	//		makeStreamApiCall(selection); 
+		if(autosubmit=='checked')
+			makeStreamApiCall(selection); 
+		
 	}
 	
   } 
@@ -73,21 +69,70 @@ document.addEventListener("mouseup", function(event) {
 });
 
 function SwitchProfile(){
-	switch (document.querySelector('#defaultselect').value) { 
-					case 'custom1user1': 
-						document.getElementById('custom').value = custom1Value; 
-						document.getElementById('user').value = user1Value; 
-						break; 
-					case 'custom2user2': 
-						document.getElementById('custom').value = custom2Value; 
-						document.getElementById('user').value = user2Value; 
-						break; 
-					case 'custom3user3': 
-						document.getElementById('custom').value = custom3Value; 
-						document.getElementById('user').value = user3Value; 
-						break; 
-					}; 
+  const selectElement = document.querySelector("#defaultselect");
+  const selectedOptionValue = selectElement.value;
+
+  profiles.forEach((profile) => {
+    if (`${profile.savecustom}` === selectedOptionValue) {
+       document.getElementById("user").value = profile.saveuser;
+    }
+  });
 	
+};
+
+function LoadProfiles(){	
+  chrome.storage.sync.get(['saveprofiles'], function(result) {
+//	  console.log(result);	
+	  if(result.length==0)
+		createDefaultProfiles();
+	  else
+		profiles=result.saveprofiles;
+	  reloadProfileUI();
+  });
+}
+
+function reloadProfileUI(){
+		  // Get the select element by its ID
+			const selectElement = document.getElementById('defaultselect');
+			selectElement.innerHTML='';
+			// Iterate over the profiles array and create an option element for each profile
+			profiles.forEach(profile => {
+			  const optionElement = document.createElement('option');
+			  optionElement.setAttribute('value', profile.savecustom);
+			  optionElement.textContent =profile.savecustom;
+			  selectElement.appendChild(optionElement);
+			});
+		    // set the first option as selected
+			if (selectElement && selectElement.options.length > 0) {
+				selectElement.options[0].setAttribute('selected', 'selected');
+			}
+
+}
+
+function createDefaultProfiles(){
+    profiles = [];
+	//console.log("create default profiles");
+	// Define a new profile object
+	const newProfile1 = {
+	  savecustom: 'tranlator',
+	  saveuser: 'Rewrite the text in authentic English:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile1);
+	// Define a new profile object
+	const newProfile2 = {
+	  savecustom: 'proofreader',
+	  saveuser: 'Proofread the following content in original language:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile2);
+	// Define a new profile object
+	const newProfile3 = {
+	  savecustom: 'summarizer',
+	  saveuser: 'Summarize following content in less than 20 words:'
+	};
+	// Add the new profile to the profiles array
+	profiles.push(newProfile3);
 };
 
 
@@ -98,38 +143,20 @@ function LoadOptions(){
     // Set the saved options as the default values
     const options = result.options;
     if (options) {
-		//document.getElementById('status').innerHTML = "LoadOptions";
-		//document.getElementById('status').innerHTML = autosubmit+"LoadOptions:"+options.saveautosubmit;
-		if(options.savedefaultAssistant)
-			defaultAssistant = options.savedefaultAssistant;
-		if(options.savecustom1)
-			custom1Value = options.savecustom1;
-		if(options.savecustom2)
-			custom2Value = options.savecustom2;
-		if(options.savecustom3)
-			custom3Value = options.savecustom3;
-		if(options.saveuser1)
-			user1Value = options.saveuser1;
-		if(options.saveuser2)
-			user2Value = options.saveuser2;
-		if(options.saveuser3)
-			user3Value = options.saveuser3;
 		if(options.saveapiKey)
 			apiKey = options.saveapiKey;
-		if(options.saveapiKey)
+		if(options.savetemperature)
 			temperature = options.savetemperature;
-		if(options.saveapiKey)
+		if(options.savemaxToken)
 			maxToken = options.savemaxToken;
 		if(options.savetopP)
 			topP = options.savetopP;
 		if(options.savemodels)	
 			models = options.savemodels;
-		//document.getElementById('status').innerHTML = autosubmit+"before LoadOptions:"+options.saveautosubmit+(options.saveautosubmit!=autosubmit)+(options.saveautosubmit==autosubmit)+(options.saveautosubmit===autosubmit);
 		if(options.saveautosubmit!=autosubmit)	
 			autosubmit = options.saveautosubmit;
 		//this is not a bug, take some time to allow the options save finished.
 		//document.getElementById('response').innerHTML = autosubmit+"after LoadOptions:"+options.saveautosubmit+(options.saveautosubmit!=autosubmit)+(options.saveautosubmit==autosubmit)+(options.saveautosubmit===autosubmit);
-				
     }
   });
 };
@@ -159,15 +186,15 @@ function makeApiCall(selectedText) {
   };
 	
 
-  var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
+  //var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
   var userstring=document.getElementById('user').value+selectedText;
 	
-  document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
+  document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+userstring;
   const data = {
       messages: [
 	  //{"role": "system", "content": "You answer questions factually based on the context provided."},
 	  //{"role": "system","name":"context","content": systemstring},
-	  {"role": "user", "content":systemstring+selectedText}],
+	  {"role": "user", "content":userstring}],
       temperature: temperature,
       max_tokens: maxToken,
       model: models,
@@ -185,14 +212,14 @@ function makeStreamApiCall(selectedText) {
 	xhr.setRequestHeader("Authorization", `Bearer ${API_KEY}`);
 	xhr.setRequestHeader('Accept', 'text/event-stream');
 	
-    var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
+//    var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
     var userstring=document.getElementById('user').value+selectedText;
-    document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
+    document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+userstring;
 	const reqBody = {
 		messages: [
 			  //{"role": "system", "content": "You answer questions factually based on the context provided."},
 			  //{"role": "system","name":"context","content": systemstring},
-			  {"role": "user", "content":systemstring+selectedText}],
+			  {"role": "user", "content":userstring}],
 		model: models,
 		max_tokens: maxToken,
 		temperature: temperature,
@@ -257,9 +284,9 @@ function CreateIcon(){
 	
 	icon.addEventListener("click", () => {
 		icon.style.display = 'none';
+		LoadProfiles();
 		LoadOptions();
 		// only reset the default profile when showing the popupwindow
-		document.getElementById('defaultselect').value = defaultAssistant;
 		SwitchProfile();
 		
 		document.getElementById("popupwindow").style.display='';
@@ -295,12 +322,8 @@ function CreatePopupWindow(){
 			 <div class="GPTExtensionForm">
 				<label class="GPTExtensionlabel" for="defaultselect">Chose your ChatGPT Profile:</label>
 				<select class="GPTExtensionselect" id="defaultselect" name="defaultselect">
-				  <option value="custom1user1">Profile1</option> 
-				  <option value="custom2user2">Profile2</option> 
-				  <option value="custom3user3">Profile3</option> 
-				</select>
-				<input class="GPTExtensioninput" id="custom" type="text">
-				<input class="GPTExtensioninput" id="user" type="text">
+					</select>
+			  <input class="GPTExtensioninput" id="user" type="text">
 				
 			  <div class="GPTExtensiondiv" id="response">response area</div>
 			  <div class="GPTExtensionbutton-container">
@@ -321,7 +344,7 @@ function CreatePopupWindow(){
 		  </div>
 			`;
 			document.body.appendChild(popup);
-			
+			reloadProfileUI();
 			document.querySelector('#defaultselect').addEventListener('change', () => { 
 				SwitchProfile();
 			}); 
@@ -347,8 +370,7 @@ function CreatePopupWindow(){
 			document.getElementById('submitButton').addEventListener('click', () => {
 			  makeStreamApiCall(document.getElementById('edit').value);
 			});
-			LoadOptions();
-			
+		
 		};	
 	
 	popup.style.display = 'none';	

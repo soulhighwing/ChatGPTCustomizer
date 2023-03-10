@@ -8,23 +8,11 @@
   <body class="GPTExtensionbody">
     <h1 class="GPTExtensionh1">ChatGPTCustomizer Options</h1>
     <form class="GPTExtensionForm">
-		<label class="GPTExtensionlabel" for="defaultselect">Default Profile:</label>
-		<select class="GPTExtensionselect" id="defaultselect" name="defaultselect">
+		<label class="GPTExtensionlabel" for="defaultselect">Profile list:</label>
+		<ul id="GPTExtensionprofiles-list">
 
-		<option value="custom1user1">Profile1</option> 
-		<option value="custom2user2">Profile2</option> 
-		<option value="custom3user3">Profile3</option> </select>
-		
-		<label class="GPTExtensionlabel" for="custom1">Profile 1:</label>
-		<input class="GPTExtensioninput" type="text" id="custom1" name="custom1">
-		<input class="GPTExtensioninput" type="text" id="user1" name="user1">
-		<label class="GPTExtensionlabel" for="custom2">Profile 2:</label>
-		<input class="GPTExtensioninput" type="text" id="custom2" name="custom2">
-		<input class="GPTExtensioninput" type="text" id="user2" name="user2">
-		<label class="GPTExtensionlabel" for="custom3">Profile 3:</label>
-		<input class="GPTExtensioninput" type="text" id="custom3" name="custom3">
-		<input class="GPTExtensioninput" type="text" id="user3" name="user3">
-		
+		</ul>
+
 		<label class="GPTExtensionlabel" for="apikey">API Key:</label>
 		<input class="GPTExtensioninput" type="text" id="apikey" name="apikey">
 
@@ -43,8 +31,8 @@
         <input class="GPTExtensioninput" type="checkbox" id="autosubmit" name="autosubmit">
 
 	<div class="GPTExtensionbutton-container">	
-      <button  class="GPTExtensionbutton" type="button" id="save">Save Options</button><div id="status"></div>
-      <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default Options</button>
+      <button  class="GPTExtensionbutton" type="button" id="save">Save</button><div id="status"></div>
+      <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default</button>
 	  </div>
 	Create by <a href="https://twitter.com/soulhighwing">SoulHighWing</a>
 	  
