@@ -10,8 +10,8 @@ var lastX, lastY;
 var popup,icon;
 
 //console.log("content.js running");
-LoadProfiles();
-LoadOptions();
+loadProfiles();
+loadOptions();
 CreateIcon();
 CreatePopupWindow();
 document.addEventListener('mousedown', function(event) {
@@ -47,14 +47,15 @@ document.addEventListener("mouseup", function(event) {
 		icon.style.display='';
 	}	
 	else{
-		if (popup.contains(event.target)) {
+		const isinsidepopup = event.target.closest('.GPTExtensionForm');
+		if (isinsidepopup) {
 			return; // clicked element is inside the popup window, do nothing
 		}
-		LoadOptions();
-		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
+		loadOptions();
+		document.getElementById("customizeEdit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = "mouseup:"+autosubmit;
 		if(autosubmit=='checked')
-			makeStreamApiCall(selection); 
+			makeStreamApiCall(); 
 		
 	}
 	
@@ -80,15 +81,11 @@ function SwitchProfile(){
 	
 };
 
-function LoadProfiles(){	
-  chrome.storage.sync.get(['saveprofiles'], function(result) {
-//	  console.log(result);	
-	  if(result.length==0)
-		createDefaultProfiles();
-	  else
-		profiles=result.saveprofiles;
-	  reloadProfileUI();
-  });
+function showStatus(infostring){
+	  document.getElementById('status').textContent = infostring;
+	  setTimeout(function() {
+      document.getElementById('status').textContent = '';
+    }, 1000);	
 }
 
 function reloadProfileUI(){
@@ -106,6 +103,9 @@ function reloadProfileUI(){
 			if (selectElement && selectElement.options.length > 0) {
 				selectElement.options[0].setAttribute('selected', 'selected');
 			}
+			if(profiles.length>0)
+				document.getElementById("user").value = profiles[0].saveuser;
+
 
 }
 
@@ -135,9 +135,23 @@ function createDefaultProfiles(){
 	profiles.push(newProfile3);
 };
 
-
+function loadProfiles(){	
+return new Promise((resolve, reject) => {
+  chrome.storage.sync.get(['saveprofiles'], function(result) {
+//	  console.log(result);	
+	  if(result.length==0)
+		createDefaultProfiles();
+	  else
+		profiles=result.saveprofiles;
+	  reloadProfileUI();
+	  showStatus("LoadProfiles");
+	  resolve();
+  });
+});  
+};
   
-function LoadOptions(){	
+function loadOptions(){	
+  return new Promise((resolve, reject) => {
 	// Load the saved options from storage
 	chrome.storage.sync.get(['options'], (result) => {
     // Set the saved options as the default values
@@ -157,12 +171,12 @@ function LoadOptions(){
 			autosubmit = options.saveautosubmit;
 		//this is not a bug, take some time to allow the options save finished.
 		//document.getElementById('response').innerHTML = autosubmit+"after LoadOptions:"+options.saveautosubmit+(options.saveautosubmit!=autosubmit)+(options.saveautosubmit==autosubmit)+(options.saveautosubmit===autosubmit);
-    }
+    };
+	  showStatus("LoadOptions");
+	  resolve();
   });
+});
 };
-
-
-
 
 
 function makeApiCall(selectedText) {
@@ -187,7 +201,7 @@ function makeApiCall(selectedText) {
 	
 
   //var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
-  var userstring=document.getElementById('user').value+selectedText;
+  var userstring=document.getElementById('user').value+': '+document.getElementById('customizeEdit').value;
 	
   document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+userstring;
   const data = {
@@ -203,7 +217,7 @@ function makeApiCall(selectedText) {
   xhr.send(JSON.stringify(data));
 };
 
-function makeStreamApiCall(selectedText) {
+function makeStreamApiCall() {
 	const API_KEY = apiKey;
 	const API_URL = "https://api.openai.com/v1/chat/completions";
 	const xhr = new XMLHttpRequest();
@@ -213,7 +227,8 @@ function makeStreamApiCall(selectedText) {
 	xhr.setRequestHeader('Accept', 'text/event-stream');
 	
 //    var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
-    var userstring=document.getElementById('user').value+selectedText;
+    var userstring=document.getElementById('user').value+": "+document.getElementById('customizeEdit').value;
+	console.log(userstring);
     document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+userstring;
 	const reqBody = {
 		messages: [
@@ -277,29 +292,25 @@ function CreateIcon(){
     icon.id = "text-highlight-icon";
     icon.src = chrome.runtime.getURL("icon.png");
     icon.style.position = "absolute";
-    document.body.appendChild(icon);
 	icon.style.left ="0px";
 	icon.style.top = "0px";
 	icon.style.zIndex = "9999";
+	icon.style.display = 'none';
+    document.body.appendChild(icon);
 	
-	icon.addEventListener("click", () => {
+	icon.addEventListener("click", async () => {
 		icon.style.display = 'none';
-		LoadProfiles();
-		LoadOptions();
-		// only reset the default profile when showing the popupwindow
-		SwitchProfile();
-		
 		document.getElementById("popupwindow").style.display='';
 		document.getElementById('popupwindow').style.left = event.pageX + "px";
 		document.getElementById('popupwindow').style.top = event.pageY + "px";
 		var selection = window.getSelection().toString();
-		document.getElementById("edit").value = selection; // set the value of the textarea to the selected text	
+		document.getElementById("customizeEdit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = autosubmit+"iconclick:"+(autosubmit=='checked')+(autosubmit==='checked');
+		await Promise.all([loadProfiles(), loadOptions()]);
 		if(autosubmit=='checked')
-			makeStreamApiCall(selection); 
+			makeStreamApiCall(); 
 
 	});	  
-	icon.style.display = 'none';
 }
 
 function CreatePopupWindow(){
@@ -315,6 +326,7 @@ function CreatePopupWindow(){
 			popup.style.backgroundColor = "#ffffff"; // set background color to white
 			popup.style.border = "1px solid #ccc"; // set border to 1px solid gray
 			popup.style.width = "600px";
+			popup.style.display = 'none';	
 			popup.innerHTML = `
 			  <head>
 				<link rel="stylesheet" href="${chrome.runtime.getURL("options.css")}">
@@ -336,7 +348,7 @@ function CreatePopupWindow(){
 				  <img src="${chrome.runtime.getURL("copytotextarea.png")}" alt="Copy to Edit">
 			</button>
 			</div>
-			  <textarea class="GPTExtensiontextarea" id="edit" name="edit" rows="5"></textarea>
+			  <textarea class="GPTExtensiontextarea" id="customizeEdit" rows="5"></textarea>
 			  <div class="GPTExtensionbutton-container">
 				<button class="GPTExtensionbutton" id="submitButton">Submit</button><div id="status"></div>
 				<button class="GPTExtensionbutton" id="optionsButton">Options</button>
@@ -360,7 +372,7 @@ function CreatePopupWindow(){
 			});
 
 			document.getElementById('copyToEditButton').addEventListener('click', () => {
-			  var textarea = document.getElementById("edit");
+			  var textarea = document.getElementById("customizeEdit");
 			  textarea.value = document.getElementById('response').innerText;
 			});
 			document.getElementById('optionsButton').addEventListener('click', () => {
@@ -368,11 +380,10 @@ function CreatePopupWindow(){
 			});
 
 			document.getElementById('submitButton').addEventListener('click', () => {
-			  makeStreamApiCall(document.getElementById('edit').value);
+			  makeStreamApiCall(document.getElementById('customizeEdit').value);
 			});
 		
 		};	
 	
-	popup.style.display = 'none';	
 }
 

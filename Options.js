@@ -69,7 +69,7 @@ function createDefaultProfiles(){
 	//console.log("create default profiles");
 	// Define a new profile object
 	const newProfile1 = {
-	  savecustom: 'tranlator',
+	  savecustom: 'translator',
 	  saveuser: 'Rewrite the text in authentic English:'
 	};
 	// Add the new profile to the profiles array
