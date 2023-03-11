@@ -1,6 +1,6 @@
 # ChatGPTCustomizer
-[![Watch the video](https://img.youtube.com/vi/-5CLL7Quhjc/maxresdefault.jpg)]([https://youtu.be/-5CLL7Quhjc])
-Install v 1.2.2 from Chrome web store https://chrome.google.com/webstore/detail/chatgptcustomizer/ciceinlnjocpopoccfhekjebkpapogoc
+[![Watch the v1.3.2 video](https://img.youtube.com/vi/mc2GYLrngbk/maxresdefault.jpg)]([https://youtu.be/mc2GYLrngbk])
+Install v1.2.2 from Chrome web store https://chrome.google.com/webstore/detail/chatgptcustomizer/ciceinlnjocpopoccfhekjebkpapogoc
 
 ChatGPTCustomizer is a powerful and flexible Chrome extension that enables you to personalize your chat experience with the unlimited power of the ChatGPT API. With ChatGPTCustomizer, you can create unlimited separate profiles tailored to your unique communication needs. Whether it's for personal or professional use, ChatGPTCustomizer allows you to customize your chat style, language, and tone to fit the context of the conversation and your mood.
 
