@@ -10,12 +10,50 @@ const autosubmitBox = document.getElementById('autosubmit');
 // Get the button elements
 const saveButton = document.getElementById('save');
 const restoreButton = document.getElementById('restore');
-
+const neprofileButton = document.getElementById('newprofile');
 loadsaveProfiles();
 loadsaveOptions();
 
+
+// Attach click event listeners to the buttons
+saveButton.addEventListener('click', saveOptions);
+restoreButton.addEventListener('click', restoreDefaults);
+neprofileButton.addEventListener('click', addNewProfile);
+
+function addNewProfile() {
+	 const profileList = document.getElementById('GPTExtensionprofiles-list');
+	 const listItem = document.createElement('li');
+	 const index=profileList.childElementCount;
+	 const newindex=index+1;
+		listItem.id = `profile-${index}`;
+		listItem.className='GPTExtensionli';
+		listItem.draggable = true;
+		listItem.innerHTML = `
+			<div class="GPTExtensionbutton-container">	
+			<input class="GPTExtensionnameinput" type="text" id="custom${index}" name="custom${index}" value="Profile ${newindex}">
+			<input class="GPTExtensioninput" type="text" id="user${index}" name="user${index}" value="Acting as an Assistant">
+			<button class="GPTExtensionbutton"  type="button" id="removeProfile${index}"><b>-</b></button>
+			</div>
+		`;
+		// Add the list item to the profile list
+		profileList.insertBefore(listItem,profileList.firstChild);
+		listItem.addEventListener('dragstart', handleDragStart);
+		listItem.addEventListener('dragenter', handleDragEnter);
+		listItem.addEventListener('dragover', handleDragOver);
+		listItem.addEventListener('drop', handleDrop);
+		document.getElementById(`removeProfile${index}`).addEventListener('click', handleDeleteProfile);	
+		
+}
+function handleDeleteProfile(event) {
+  const listItem = event.target.closest('.GPTExtensionli');
+  if (listItem) {
+    listItem.remove();
+  }
+}
+
 // Loads the profiles from the Chrome storage
 function loadsaveProfiles() {
+	 const profileList = document.getElementById('GPTExtensionprofiles-list');
   chrome.storage.sync.get(['saveprofiles'], function(result) {
 	//  console.log(result);	
 	  if(result.length==0)
@@ -70,6 +108,7 @@ function reloadProfileUI(){
 			<div class="GPTExtensionbutton-container">	
 			<input class="GPTExtensionnameinput" type="text" id="custom${index}" name="custom${index}" value="${profile.savecustom}">
 			<input class="GPTExtensioninput" type="text" id="user${index}" name="user${index}" value="${profile.saveuser}">
+			<button class="GPTExtensionbutton"  type="button" id="removeProfile${index}"><b>-</b></button>
 			</div>
 		`;
 		// Add the list item to the profile list
@@ -78,7 +117,7 @@ function reloadProfileUI(){
 		listItem.addEventListener('dragenter', handleDragEnter);
 		listItem.addEventListener('dragover', handleDragOver);
 		listItem.addEventListener('drop', handleDrop);
-
+		document.getElementById(`removeProfile${index}`).addEventListener('click', handleDeleteProfile);	
 		});	
 };
 
@@ -129,9 +168,6 @@ function restoreDefaults() {
 	reloadOptionUI(createDefaultOptions());
 };
 
-// Attach click event listeners to the buttons
-saveButton.addEventListener('click', saveOptions);
-restoreButton.addEventListener('click', restoreDefaults);
 
 // Saves the profiles to the Chrome storage
 function saveProfiles() {
@@ -204,8 +240,6 @@ function saveOptions() {
     }, 1000);
   });
 };
-
-
 
 
 function handleDragStart(event) {

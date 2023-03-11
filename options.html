@@ -6,9 +6,10 @@
   <link rel="stylesheet" href="options.css">
   </head>
   <body class="GPTExtensionbody">
-    <h1 class="GPTExtensionh1">ChatGPTCustomizer Options</h1>
-    <form class="GPTExtensionForm">
-		<label class="GPTExtensionlabel" for="defaultselect">Profile list:</label>
+     <form class="GPTExtensionForm">
+		<div class="GPTExtensionbutton-container">	
+		<label class="GPTExtensionlabel" for="defaultselect">Profile list:</label><button class="GPTExtensionbutton"  type="button" id="newprofile"><b>+</b></button>
+		</div>
 		<ul id="GPTExtensionprofiles-list">
 
 		</ul>
@@ -27,14 +28,14 @@
 
       <label class="GPTExtensionlabel" for="models">Model:</label>
       <input class="GPTExtensioninput" type="text" id="models" name="models">
-		<label class="GPTExtensionlabel" for="autosubmit">Auto Submit when open the popup window:</label>
+		<label class="GPTExtensionlabel" for="autosubmit">AutoSubmit:</label>
         <input class="GPTExtensioninput" type="checkbox" id="autosubmit" name="autosubmit">
 
 	<div class="GPTExtensionbutton-container">	
-      <button  class="GPTExtensionbutton" type="button" id="save">Save</button><div id="status"></div>
-      <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default</button>
+      <button  class="GPTExtensionbutton" type="button" id="save">Save Options</button><div id="status"></div>
+      <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default Options</button>
 	  </div>
-	Create by <a href="https://twitter.com/soulhighwing">SoulHighWing</a>
+  	ChatGPTCustomizer by <a href="https://twitter.com/soulhighwing">SoulHighWing</a>
 	  
     </form>
 
