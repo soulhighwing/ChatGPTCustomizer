@@ -64,6 +64,7 @@ function loadsaveProfiles() {
   });
 };
 
+
 function createDefaultProfiles(){
     profiles = [];
 	//console.log("create default profiles");
@@ -77,7 +78,7 @@ function createDefaultProfiles(){
 	// Define a new profile object
 	const newProfile2 = {
 	  savecustom: 'proofreader',
-	  saveuser: 'Proofread the following content in original language:'
+	  saveuser: 'Proofread following content using content\'s language:'
 	};
 	// Add the new profile to the profiles array
 	profiles.push(newProfile2);
@@ -89,7 +90,6 @@ function createDefaultProfiles(){
 	// Add the new profile to the profiles array
 	profiles.push(newProfile3);
 };
-
 
 function reloadProfileUI(){
 	  // Get the profile list element

@@ -114,15 +114,15 @@ function createDefaultProfiles(){
 	//console.log("create default profiles");
 	// Define a new profile object
 	const newProfile1 = {
-	  savecustom: 'tranlator',
-	  saveuser: 'Rewrite the text in authentic English:'
+	  savecustom: 'translator',
+	  saveuser: 'Rewrite following content in authentic English:'
 	};
 	// Add the new profile to the profiles array
 	profiles.push(newProfile1);
 	// Define a new profile object
 	const newProfile2 = {
 	  savecustom: 'proofreader',
-	  saveuser: 'Proofread the following content in original language:'
+	  saveuser: 'Proofread following content using content\'s language:'
 	};
 	// Add the new profile to the profiles array
 	profiles.push(newProfile2);
@@ -303,10 +303,10 @@ function CreateIcon(){
 		document.getElementById("popupwindow").style.display='';
 		document.getElementById('popupwindow').style.left = event.pageX + "px";
 		document.getElementById('popupwindow').style.top = event.pageY + "px";
-		var selection = window.getSelection().toString();
-		document.getElementById("customizeEdit").value = selection; // set the value of the textarea to the selected text	
 		//document.getElementById('status').innerHTML = autosubmit+"iconclick:"+(autosubmit=='checked')+(autosubmit==='checked');
 		await Promise.all([loadProfiles(), loadOptions()]);
+		var selection = window.getSelection().toString();
+		document.getElementById("customizeEdit").value = selection; // set the value of the textarea to the selected text	
 		if(autosubmit=='checked')
 			makeStreamApiCall(); 
 

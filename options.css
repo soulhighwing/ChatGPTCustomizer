@@ -37,6 +37,15 @@
         border-radius: 5px;
         box-sizing: border-box;
       }
+     .GPTExtensioninput[type=password] {
+        display: block;
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 5px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
      .GPTExtensionnameinput[type=text] {
         display: block;
         width: 25%;
@@ -61,13 +70,14 @@
 
       .GPTExtensionselect {
         display: block;
-        width: 25%;
+        width: 50%;
         padding: 5px;
         margin-bottom: 5px;
         border: 2px solid #ccc;
         border-radius: 1px;
         box-sizing: border-box;
 		display: inline-block;
+		font-weight: bold;
       }
 
       .GPTExtensionbutton {
