@@ -1,11 +1,17 @@
 # ChatGPTCustomizer
 [![Watch the v1.3.2 video](https://img.youtube.com/vi/mc2GYLrngbk/maxresdefault.jpg)](https://youtu.be/mc2GYLrngbk)
-Install v1.3.2 from Chrome web store https://chrome.google.com/webstore/detail/chatgptcustomizer/ciceinlnjocpopoccfhekjebkpapogoc
+Install from Chrome web store https://chrome.google.com/webstore/detail/chatgptcustomizer/ciceinlnjocpopoccfhekjebkpapogoc
 
-ChatGPTCustomizer is a powerful and flexible Chrome extension that enables you to personalize your chat experience with the unlimited power of the ChatGPT API. With ChatGPTCustomizer, you can create unlimited separate profiles tailored to your unique communication needs. Whether it's for personal or professional use, ChatGPTCustomizer allows you to customize your chat style, language, and tone to fit the context of the conversation and your mood.
+Introducing ChatGPTCustomizer - a powerful extension for the ChatGPT API that allows you to customize your experience with multiple pre-defined profiles for different use cases such as translation, proofreading and language teaching. With ChatGPTCustomizer you can easily save and load profiles from CSV or JSON files and import/export your conversation history for further analysis. You can even change the role of each response and adjust the variables of the ChatGPT API to suit your needs. Plus, with support for GPT-3.5-Turbo API and quick select and submit functionality, you’ll have everything you need to take your conversations to the next level. Download it now and start customizing!
 
-ChatGPTCustomizer offers an intuitive and seamless interface that lets you easily switch between profiles, making it effortless to enjoy a more engaging and personalized chat experience. With this chrome extension, you no longer have to worry about using third-party JS libraries, as it has everything you need in one place.
+function list:
+Multiple pre-defined profiles for different usage: translation from/to different languages, proofreading, summarization, language teaching...etc.
+Save/load profiles from CSV or JSON.
+Import/export conversation history.
+Choose a single conversation history to submit or submit them all.
+Change the role of each response: system, assistant or user.
+Customize the variables of the ChatGPT API.
+Support the API from GPT-3.5 Turbo.
+Quick select and submit.
 
-The extension currently supports ChatGPT API gpt-3.5-turbo, and you can add your own API key by going to the options. Once you have set up your profile, you can select the text you want to submit to ChatGPT and click the extension icon to start.
 
-The icons in ChatGPTCustomizer were created using stable diffusion, and most of the code was developed in collaboration with ChatGPT. This Chrome extension has been submitted to the Google Store, and you can download the source code and try it out using the dev mode of the Chrome extension.
