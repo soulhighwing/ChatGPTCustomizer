@@ -1,44 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>ChatGPTCustomizer Options</title>
+
+<head>
+  <meta charset="utf-8">
+  <title>ChatGPTCustomizer Options</title>
   <link rel="stylesheet" href="options.css">
-  </head>
-  <body class="GPTExtensionbody">
-     <form class="GPTExtensionForm">
-		<div class="GPTExtensionbutton-container">	
-		<label class="GPTExtensionlabel" for="defaultselect">Profile list:</label><button class="GPTExtensionbutton"  type="button" id="newprofile"><b>+</b></button>
-		</div>
-		<ul id="GPTExtensionprofiles-list">
+</head>
 
-		</ul>
+<body class="GPTExtensionbody">
+  <form class="GPTExtensionForm">
+    <div class="GPTExtensionbutton-container">
+      <label class="GPTExtensionlabel" for="defaultselect">Profile list:</label>
+      <button class="GPTExtensionbutton" type="button" id="exportprofile">Export</button>
+      <button class="GPTExtensionbutton" type="button" id="importprofile">Import</button>
+      <button class="GPTExtensionbutton" type="button" id="newprofile"><b>+</b></button>
+    </div>
+    <ul id="GPTExtensionprofiles-list">
 
-		<label class="GPTExtensionlabel" for="apikey">API Key:</label>
-		<input class="GPTExtensioninput" type="password" id="apikey" name="apikey">
+    </ul>
 
-      <label class="GPTExtensionlabel" for="temperature">Temperature(0-1):</label>
-      <input class="GPTExtensioninput" type="text" id="temperature" name="temperature">
+    <label class="GPTExtensionlabel" for="apikey">API Key:</label>
+    <input class="GPTExtensioninput" type="password" id="apikey" name="apikey">
 
-      <label class="GPTExtensionlabel" for="max_token">Max Tokens(1-2048):</label>
-      <input class="GPTExtensioninput" type="text" id="max_token" name="max_token">
+    <label class="GPTExtensionlabel" for="temperature">Temperature(0-1):</label>
+    <input class="GPTExtensioninput" type="text" id="temperature" name="temperature">
 
-      <label class="GPTExtensionlabel" for="top_p">Top P(0-1):</label>
-      <input class="GPTExtensioninput" type="text" id="top_p" name="top_p">
+    <label class="GPTExtensionlabel" for="max_token">Max Tokens(1-2048):</label>
+    <input class="GPTExtensioninput" type="text" id="max_token" name="max_token">
 
-      <label class="GPTExtensionlabel" for="models">Model:</label>
-      <input class="GPTExtensioninput" type="text" id="models" name="models">
-		<label class="GPTExtensionlabel" for="autosubmit">AutoSubmit:</label>
-        <input class="GPTExtensioninput" type="checkbox" id="autosubmit" name="autosubmit">
+    <label class="GPTExtensionlabel" for="top_p">Top P(0-1):</label>
+    <input class="GPTExtensioninput" type="text" id="top_p" name="top_p">
 
-	<div class="GPTExtensionbutton-container">	
-      <button  class="GPTExtensionbutton" type="button" id="save">Save Options</button><div id="status"></div>
-      <button class="GPTExtensionbutton"  type="button" id="restore">Restore Default Options</button>
-	  </div>
-  	ChatGPTCustomizer by <a href="https://twitter.com/soulhighwing">SoulHighWing</a>
-	  
-    </form>
+    <label class="GPTExtensionlabel" for="models">Model:</label>
+    <input class="GPTExtensioninput" type="text" id="models" name="models">
+    <label class="GPTExtensionlabel" for="autosubmit">Auto submit when select:</label>
+    <input class="GPTExtensioninput" type="checkbox" id="autosubmit" name="autosubmit">
+    <label class="GPTExtensionlabel" for="autocontext">Auto select new chats as context:</label>
+    <input class="GPTExtensioninput" type="checkbox" id="autocontext" name="autocontext">
+    <label class="GPTExtensionlabel" for="contextmenuonly">Use right click context menu only:</label>
+    <input class="GPTExtensioninput" type="checkbox" id="contextmenuonly" name="contextmenuonly">
+    <div class="GPTExtensionbutton-container">
+      <button class="GPTExtensionbutton" type="button" id="save">Save Options</button>
+      <div id="status"></div>
+      <button class="GPTExtensionbutton" type="button" id="restore">Restore Default Options</button>
+    </div>
+    <div class="GPTExtensionbutton-container">
+    <b>ChatGPTCustomizer v1.5 by <a href="https://twitter.com/soulhighwing">Soulhighwing</a></b>
+    <b><a href='#' id="openTab">Try it on playground</button></a></b>
+  </div>
+  </form>
 
-    <script src="options.js"></script>
-  </body>
+  <script src="options.js"></script>
+</body>
+
 </html>

@@ -11,3 +11,14 @@ chrome.runtime.onMessage.addListener(function(message) {
 function openOptionsPage(){
     chrome.runtime.openOptionsPage();
 }
+
+chrome.runtime.onInstalled.addListener(function() {
+    chrome.contextMenus.create({
+        "title": 'ChatGPTCustomizer',
+        "contexts": ["all"],
+        "id": "ChatGPTcontextMenu"
+    });
+});
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+  chrome.tabs.sendMessage(tab.id, {action: "openEditor"});
+});
