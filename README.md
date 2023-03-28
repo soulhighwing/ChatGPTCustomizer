@@ -1,5 +1,6 @@
 # ChatGPTCustomizer
 Install from Chrome web store https://chrome.google.com/webstore/detail/chatgptcustomizer/ciceinlnjocpopoccfhekjebkpapogoc
+
 v 1.6.0 list:
 - add "//gpt" for quick request in any input area. for example: "//gpt tell me a joke" will replace the string with a joke gpt tell you.
 
