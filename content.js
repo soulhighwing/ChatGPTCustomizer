@@ -3,7 +3,7 @@ var apiKey = '';
 var temperature = '1';
 var maxToken = '512';
 var topP = '1';
-var models = 'gpt-3.5-turbo-0301';
+var models = 'gpt-3.5-turbo';
 var autosubmit = '';
 var autocontext = 'checked';
 var contextmenuonly = '';
@@ -53,6 +53,97 @@ function mouseIsAtResizeHolder(e) {
 	else
 		return false;
 }
+
+document.addEventListener('keydown', function(event) {
+	if (event.key === 'Enter') {
+	  let activeElement = document.activeElement;
+	  if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') {
+		let value = activeElement.value;
+		let gptIndex = value.indexOf('//gpt');
+		if (gptIndex !== -1) {
+		  event.preventDefault();
+		  let textInput = value.slice(gptIndex + 5);
+		  makeAPIcall(textInput).then(response => {
+			activeElement.value = value.slice(0, gptIndex) + response;
+		  }).catch(error => {
+			console.log(error);
+		  });
+		}
+	  }
+	}
+  });
+
+function makeAPIcall(textInput) {
+
+	const API_KEY = apiKey;
+	const API_URL = "https://api.openai.com/v1/chat/completions";
+	return new Promise((resolve, reject) => {
+	  const xhr = new XMLHttpRequest();
+	  xhr.open("POST", API_URL, true);
+	  xhr.setRequestHeader("Content-Type", "application/json");
+	  xhr.setRequestHeader("Authorization", `Bearer ${API_KEY}`);
+	  xhr.onreadystatechange = function() {
+		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+		  const assistant = JSON.parse(this.responseText);
+		  const responsemessage = assistant.choices[0].message.content;		  
+		  resolve(responsemessage);
+		} else if (this.readyState === XMLHttpRequest.DONE && this.status !== 200) {
+		  reject("API Call failed. Status code: " + this.status);
+		}
+	  };
+	  const data = {
+		messages: [
+		{"role": "user", "content":textInput}],
+		temperature: temperature,
+		max_tokens: maxToken,
+		model: models,
+		top_p: topP
+	  };  
+	xhr.send(JSON.stringify(data));
+	});
+  }
+
+
+
+
+  function makeApiCall(selectedText) {
+	const API_KEY = apiKey;
+	const API_URL = "https://api.openai.com/v1/chat/completions";
+	const xhr = new XMLHttpRequest();
+	xhr.open("POST", API_URL, true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.setRequestHeader("Authorization", `Bearer ${API_KEY}`);
+	xhr.onreadystatechange = function() {
+		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+		  const assistant = JSON.parse(this.responseText);
+		//  console.log(assistant);
+		  const responsemessage = assistant.choices[0].message.content;
+		//  console.log(responsemessage);
+		document.getElementById('response').innerHTML = responsemessage;
+		}
+		else{
+		document.getElementById('response').innerHTML = "Request fail, Please check the options. Make sure you have input the correct openAI api key and correct model name.";	
+		}
+  };
+	
+
+  var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
+  var userstring=document.getElementById('user').value+selectedText;
+	
+  document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
+  const data = {
+      messages: [
+	  //{"role": "system", "content": "You answer questions factually based on the context provided."},
+	  //{"role": "system","name":"context","content": systemstring},
+	  {"role": "user", "content":systemstring+selectedText}],
+      temperature: temperature,
+      max_tokens: maxToken,
+      model: models,
+	  top_p: topP
+    };  
+  xhr.send(JSON.stringify(data));
+};
+
 
 
 

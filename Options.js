@@ -259,7 +259,7 @@ function createDefaultOptions() {
     savetemperature: '1',
     savemaxToken: '512',
     savetopP: '1',
-    savemodels: 'gpt-3.5-turbo-0301',
+    savemodels: 'gpt-3.5-turbo',
     saveautosubmit: '',
     saveautocontext: '',
     savecontextmenuonly: ''
