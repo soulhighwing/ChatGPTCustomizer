@@ -104,49 +104,6 @@ function makeAPIcall(textInput) {
   }
 
 
-
-
-  function makeApiCall(selectedText) {
-	const API_KEY = apiKey;
-	const API_URL = "https://api.openai.com/v1/chat/completions";
-	const xhr = new XMLHttpRequest();
-	xhr.open("POST", API_URL, true);
-	xhr.setRequestHeader("Content-Type", "application/json");
-	xhr.setRequestHeader("Authorization", `Bearer ${API_KEY}`);
-	xhr.onreadystatechange = function() {
-		if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-		  const assistant = JSON.parse(this.responseText);
-		//  console.log(assistant);
-		  const responsemessage = assistant.choices[0].message.content;
-		//  console.log(responsemessage);
-		document.getElementById('response').innerHTML = responsemessage;
-		}
-		else{
-		document.getElementById('response').innerHTML = "Request fail, Please check the options. Make sure you have input the correct openAI api key and correct model name.";	
-		}
-  };
-	
-
-  var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
-  var userstring=document.getElementById('user').value+selectedText;
-	
-  document.getElementById('response').innerHTML = "<b>submit following text to api:</b>"+systemstring+selectedText;
-  const data = {
-      messages: [
-	  //{"role": "system", "content": "You answer questions factually based on the context provided."},
-	  //{"role": "system","name":"context","content": systemstring},
-	  {"role": "user", "content":systemstring+selectedText}],
-      temperature: temperature,
-      max_tokens: maxToken,
-      model: models,
-	  top_p: topP
-    };  
-  xhr.send(JSON.stringify(data));
-};
-
-
-
-
 document.addEventListener('mousedown', function (event) {
 	if (mouseIsAtResizeHolder(event))
 		return;
@@ -368,6 +325,14 @@ function makeApiCall(selectedText) {
   xhr.send(JSON.stringify(data));
 };
 */
+function processSpecialChar(text) {
+	text = text.replace(/&/g, "&amp;");
+	text = text.replace(/</g, "&lt;");
+	text = text.replace(/>/g, "&gt;");
+	text = text.replace(/"/g, "&quot;");
+	text = text.replace(/'/g, "&apos;");
+	return text;
+}
 
 function makeStreamApiCall() {
 	isStreaming=true;
@@ -380,7 +345,7 @@ function makeStreamApiCall() {
 	xhr.setRequestHeader('Accept', 'text/event-stream');
 
 	//    var systemstring=document.getElementById('custom').value+document.getElementById('user').value;
-	var userstring = document.getElementById('user').value + ": " + document.getElementById('customizeEdit').value;
+	var userstring = document.getElementById('user').value + "```" + document.getElementById('customizeEdit').value;
 	const reqBody = {
 		messages: [
 			//{"role": "system", "content": "You answer questions factually based on the context provided."},
@@ -447,7 +412,7 @@ function makeStreamApiCall() {
 				};
 			};
 			const lastChild = responseContainer.lastChild;
-			lastChild.innerHTML = buffer;
+			lastChild.innerHTML = processSpecialChar(buffer);
 			//console.log(parentresponsContainer.scrollTop ,responseContainer.offsetTop , parentresponsContainer.offsetTop);
 			parentresponsContainer.scrollTop = responseContainer.offsetTop - parentresponsContainer.offsetTop;
 
@@ -577,7 +542,7 @@ function createResponse(role, context) {
 	// create the context div
 	const contextDiv = document.createElement('div');
 	contextDiv.classList.add('GPTExtensioncontext');
-	contextDiv.textContent = context;
+	contextDiv.textContent =processSpecialChar(context);
 
 	// append the elements to the container
 	container.appendChild(checkbox);

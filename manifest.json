@@ -9,7 +9,7 @@
     "https://api.openai.com/*"
   ],
   "description": "Customize your assistant using ChatGPT API with multiple profiles.",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "options_page": "options.html",
   "web_accessible_resources": [
     {
