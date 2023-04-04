@@ -1,0 +1,19 @@
+Privacy policy for chrome extension ChatGPTCustomizer
+
+This privacy policy explains how I, the developer of this chrome extension, collect, use, and protect your personal information. I respect your privacy and I do not use your data to do anything.
+
+What data do I collect?
+
+This chrome extension does not collect any data from you or your browser. It does not require any permissions to access your browsing history, tabs, cookies, or any other information. It only uses the chrome.tabs API to create a new tab when you click on the extension icon.
+
+How do I use your data?
+
+I do not use your data for any purpose. I do not store, share, sell, or transfer your data to any third parties. I do not use your data for analytics, advertising, or any other service.
+
+How do I protect your data?
+
+Since I do not collect any data from you, there is no need to protect it. However, I still take reasonable measures to ensure that this chrome extension is secure and free from malware. I also update the extension regularly to fix any bugs or issues.
+
+Your rights and choices
+
+You have the right to uninstall this chrome extension at any time if you do not agree with this privacy policy or if you no longer want to use it. You can also contact me at [email address] if you have any questions or concerns about this privacy policy or this chrome extension.
